@@ -17,12 +17,23 @@ API_TOKEN = config['API_TOKEN']
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
+button1 = types.KeyboardButton(text='Старт')
+button2 = types.KeyboardButton(text='Информация')
+button3 = types.KeyboardButton(text='Шутка')
+
+keyboard1 = [
+    [button2, button3],
+    [button1,]
+]
+
+kb1 = types.ReplyKeyboardMarkup(keyboard=keyboard1, resize_keyboard=True)
+
 # Обработчик команды /start
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     try:
         name = message.chat.first_name
-        await message.answer(f"Привет, {name}! Я бот Вова знаю три слова - /start, /info и /joke")
+        await message.answer(f"Привет, {name}! Я бот Вова знаю три слова - /start, /info и /joke", reply_markup=kb1)
     except Exception as e:
         logging.error(f"Ошибка при обработке команды /start: {e}")
 
@@ -62,6 +73,21 @@ async def cmd_no(message: types.Message):
         await message.answer("Не согласен /no")
     except Exception as e:
         logging.error(f"Ошибка при обработке команды /no: {e}")
+
+# Отработчик команд реагирующих на сообщения
+@dp.message(F.text)
+async def msg_echo(message: types.Message):
+    msg_user = message.text.lower()
+    name = message.chat.first_name
+    if 'Привет' in msg_user:
+        await message.answer(f'Привет - {name}')
+    elif 'Пока' in msg_user:
+        await message.answer(f'Пока - {name}')
+    elif 'Ты кто' in msg_user:
+        await message.answer(f'Я тестовый бот - {name}')
+    else:
+        await message.answer(f'Я пока не знаю такого слова - {name}')
+
 
 # Обработчик неизвестных команд
 @dp.message()
