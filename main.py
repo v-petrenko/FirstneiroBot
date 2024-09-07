@@ -3,6 +3,7 @@ import asyncio
 import logging
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters.command import Command
+from rondom_dog import dog
 
 # Настройки логирования
 logging.basicConfig(level=logging.INFO)
@@ -20,8 +21,10 @@ dp = Dispatcher()
 button1 = types.KeyboardButton(text='Старт')
 button2 = types.KeyboardButton(text='Информация')
 button3 = types.KeyboardButton(text='Шутка')
+button4 = types.KeyboardButton(text='Покажи собаку')
 
 keyboard1 = [
+    [button4,],
     [button3,button2],
     [button1,]
 ]
@@ -76,6 +79,16 @@ async def cmd_no(message: types.Message):
     except Exception as e:
         logging.error(f'Ошибка при обработке команды /no: {e}')
 
+@dp.message(F.text == 'Покажи собаку')
+@dp.message(Command('Dog'))
+async def cmd_dog(message: types.Message):
+    try:
+        name = message.chat.first_name
+        image_dog = dog()
+        await message.answer_photo(photo=image_dog)
+    except Exception as e:
+        logging.error(f'Ошибка при обработке команды /info: {e}')
+
 # Отработчик команд реагирующих на сообщения
 @dp.message(F.text)
 async def msg_echo(message: types.Message):
@@ -89,7 +102,6 @@ async def msg_echo(message: types.Message):
         await message.answer(f'Я тестовый бот - {name}')
     else:
         await message.answer(f'Я пока не знаю такого слова - {name}')
-
 
 # Обработчик неизвестных команд
 @dp.message()
