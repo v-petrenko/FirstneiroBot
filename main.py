@@ -34,7 +34,7 @@ kb1 = types.ReplyKeyboardMarkup(keyboard=keyboard1, resize_keyboard=True)
 async def cmd_start(message: types.Message):
     try:
         name = message.chat.first_name
-        await message.answer(f'Привет, {name}! Я бот Вова знаю три слова - /start, /info и /joke')
+        await message.answer(f'Привет, {name}! Я бот Вова знаю три слова - /start, /info и /joke',reply_markup=kb1)
     except Exception as e:
         logging.error(f'Ошибка при обработке команды /start: {e}')
 
@@ -43,7 +43,7 @@ async def cmd_start(message: types.Message):
 @dp.message(Command('info'))
 async def cmd_info(message: types.Message):
     try:
-        await message.reply('Я тестовый бот, не обижайте меня, а то Вам прилетит')
+        await message.reply('Я тестовый бот, не обижайте меня, а то Вам прилетит',reply_markup=kb1)
     except Exception as e:
         logging.error(f'Ошибка при обработке команды /info: {e}')
 
